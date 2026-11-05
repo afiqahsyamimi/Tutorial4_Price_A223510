@@ -9,6 +9,8 @@ public class PriceGUI extends JFrame implements ActionListener
 
     private JComboBox<String> cboProduct;
 
+    private JLabel lblPrice;
+
     private JButton btnCheck;
     private JButton btnClear;
 
@@ -17,7 +19,7 @@ public class PriceGUI extends JFrame implements ActionListener
     public PriceGUI()
     {
         setTitle("Price Checker");
-        setSize(500,350);
+        setSize(550,400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -25,17 +27,18 @@ public class PriceGUI extends JFrame implements ActionListener
 
         JLabel lblTitle = new JLabel("PRICE CHECKER", SwingConstants.CENTER);
 
-        lblTitle.setFont(new Font("Arial",Font.BOLD,18));
+        lblTitle.setFont(
+                new Font("Arial",Font.BOLD,20));
 
         add(lblTitle, BorderLayout.NORTH);
 
-        JPanel panel = new JPanel(new GridLayout(3,2));
+        JPanel panel = new JPanel(new GridLayout(4,2,5,5));
 
         panel.add(new JLabel("Customer Name"));
         txtName = new JTextField();
         panel.add(txtName);
 
-        panel.add(new JLabel("Salary"));
+        panel.add(new JLabel("Salary (RM)"));
         txtSalary = new JTextField();
         panel.add(txtSalary);
 
@@ -49,6 +52,11 @@ public class PriceGUI extends JFrame implements ActionListener
 
         panel.add(cboProduct);
 
+        panel.add(new JLabel("Item Price"));
+
+        lblPrice = new JLabel("RM5500.00");
+        panel.add(lblPrice);
+
         add(panel, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel();
@@ -61,7 +69,7 @@ public class PriceGUI extends JFrame implements ActionListener
 
         add(buttonPanel, BorderLayout.SOUTH);
 
-        txtOutput = new JTextArea(8,20);
+        txtOutput = new JTextArea(10,25);
         txtOutput.setEditable(false);
 
         add(new JScrollPane(txtOutput), BorderLayout.EAST);
@@ -69,61 +77,92 @@ public class PriceGUI extends JFrame implements ActionListener
         btnCheck.addActionListener(this);
         btnClear.addActionListener(this);
 
+        cboProduct.addActionListener(this);
+
         setVisible(true);
     }
 
     public void actionPerformed(ActionEvent e)
     {
-        if(e.getSource() == btnCheck)
+        // Update price automatically
+        if(e.getSource() == cboProduct)
         {
-            String name = txtName.getText();
-
-            double salary = Double.parseDouble(txtSalary.getText());
-
-            Customer c = new Customer(name,salary);
-
             String product = cboProduct.getSelectedItem().toString();
 
             if(product.equals("Iphone 14 ProMax"))
             {
-                txtOutput.setText("The product is Iphone 14 ProMax.\n\n");
-
-                if(salary > 4000)
-                {
-                    txtOutput.append("The customer's name is " + name + " with salary RM" + salary + " can buy this product.\n\n" + "Your salary is higher than the product price.");
-                }
-                else
-                {
-                    txtOutput.append("The customer's name is " + name + " with salary RM" + salary + " cannot buy this product.\n\n" + "The product price is more than your salary.");
-                }
+                lblPrice.setText("RM5500.00");
             }
 
             else if(product.equals("Lenovo Yoga"))
             {
-                txtOutput.setText( "The product is Lenovo Yoga.\n\n");
+                lblPrice.setText("RM6000.00");
+            }
 
-                if(salary > 4000)
+            else if(product.equals("BMW"))
+            {
+                lblPrice.setText("RM200000.00");
+            }
+        }
+
+        // Check button
+        if(e.getSource() == btnCheck)
+        {
+            try
+            {
+                String name = txtName.getText();
+
+                double salary = Double.parseDouble(txtSalary.getText());
+
+                String product = cboProduct.getSelectedItem().toString();
+
+                if(product.equals("Iphone 14 ProMax"))
                 {
-                    txtOutput.append("The customer's name is " + name + " with salary RM" + salary + " can buy this product.\n\n" + "Your salary is higher than the product price.");
+                    txtOutput.setText("The product is Iphone 14 ProMax.\n" + "Price : RM5500.00\n\n");
+
+                    if(salary > 4000)
+                    {
+                        txtOutput.append("The customer's name is " + name + " with salary RM" + salary + " can buy this product.\n\n" + "Your salary is higher than the product price.");
+                    }
+                    else
+                    {
+                        txtOutput.append("The customer's name is " + name + " with salary RM" + salary + " cannot buy this product.\n\n" + "The product price is more than your salary.");
+                    }
                 }
+
+                else if(product.equals("Lenovo Yoga"))
+                {
+                    txtOutput.setText(
+                        "The product is Lenovo Yoga.\n" + "Price : RM6000.00\n\n");
+
+                    if(salary > 4000)
+                    {
+                        txtOutput.append("The customer's name is " + name + " with salary RM" + salary + " can buy this product.\n\n" + "Your salary is higher than the product price.");
+                    }
+                    else
+                    {
+                        txtOutput.append("The customer's name is " + name + " with salary RM" + salary + " cannot buy this product.\n\n" + "The product price is more than your salary.");
+                    }
+                }
+
                 else
                 {
-                    txtOutput.append("The customer's name is " + name + " with salary RM" + salary + " cannot buy this product.\n\n" + "The product price is more than your salary.");
+                    txtOutput.setText("The car brand is BMW.\n" + "Price : RM200000.00\n\n");
+
+                    if(salary > 8000)
+                    {
+                        txtOutput.append("The customer's name is " + name + " with salary RM" + salary + " can buy this car.\n\n" + "Your salary is higher than the car price.");
+                    }
+                    else
+                    {
+                        txtOutput.append("The customer's name is " + name + " with salary RM" + salary + " cannot buy this car.");
+                    }
                 }
             }
 
-            else
+            catch(NumberFormatException ex)
             {
-                txtOutput.setText("The car brand is BMW with price RM200000.\n\n");
-
-                if(salary > 8000)
-                {
-                    txtOutput.append("The customer's name is " + name + " with salary RM" + salary + " can buy this car.\n\n" + "Your salary is higher than the car price.");
-                }
-                else
-                {
-                    txtOutput.append("The customer's name is " + name + " with salary RM" + salary + " cannot buy this car.");
-                }
+                JOptionPane.showMessageDialog(this, "Please enter a valid salary!", "Input Error", JOptionPane.ERROR_MESSAGE);
             }
         }
 
@@ -132,6 +171,9 @@ public class PriceGUI extends JFrame implements ActionListener
             txtName.setText("");
             txtSalary.setText("");
             txtOutput.setText("");
+
+            cboProduct.setSelectedIndex(0);
+            lblPrice.setText("RM5500.00");
         }
     }
 
